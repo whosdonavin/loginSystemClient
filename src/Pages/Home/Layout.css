@@ -1,0 +1,21 @@
+* {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-decoration: none;
+  box-sizing: border-box;
+  font-family: "Oswald", sans-serif;
+}
+body {
+  color: #0b2545;
+  background: #6f9283;
+}
+a {
+  color: white;
+}
+.currentPage {
+  border-bottom: 1px solid #0b2545;
+}
+#open {
+  display: block;
+}
