@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import LandingNav from "./Components/LandingNav";
@@ -14,6 +14,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
 `;
+const Message = styled.p``;
 const Form = styled.form`
   color: white;
   display: flex;
@@ -86,6 +87,8 @@ const SignInLink = styled(Link)`
 const Register = () => {
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
+  const [responseStatus, setResponseStatus] = useState(null);
+  const [responseMessage, setResponseMessage] = useState(null);
 
   function handleUsername() {
     let input = document.getElementById("username");
@@ -99,19 +102,31 @@ const Register = () => {
   function registerUser(e) {
     e.preventDefault();
     axios
-      .post("http://localhost:4000/api/register", {
+      .post("http://localhost:3333/api/register", {
         username: username,
         password: password,
       })
       .then((response) => {
-        console.log(response);
+        document.getElementById("form").id = "submitted";
+        setResponseMessage(response.data.message);
+        const status = response.data.status;
+
+        if (status === "Success") {
+          setTimeout(() => {
+            window.location.replace("http://localhost:3000/Login");
+          }, 2000);
+        } else {
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        }
       });
   }
   return (
     <Page>
       <LandingNav />
       <Container>
-        <Form autocomplete="off">
+        <Form autocomplete="off" id="form">
           <Title>Register</Title>
 
           <Inputs>
@@ -121,11 +136,11 @@ const Register = () => {
             </Username>
             <Password>
               <Label>Password</Label>
-              <Input id="password" onChange={handlePassword} />
+              <Input type="password" id="password" onChange={handlePassword} />
             </Password>
             <ConfirmPassword>
               <Label>Confirm Password</Label>
-              <Input />
+              <Input type="password" />
             </ConfirmPassword>
 
             <SignUpButton onClick={registerUser}>Sign Up</SignUpButton>
@@ -136,6 +151,7 @@ const Register = () => {
             <SignInLink to="/Login">Sign In</SignInLink>
           </SignIn>
         </Form>
+        <Message id={responseStatus}>{responseMessage}</Message>
       </Container>
     </Page>
   );

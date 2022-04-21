@@ -19,3 +19,6 @@ a {
 #open {
   display: block;
 }
+#submitted {
+  display: none;
+}
