@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import LandingNav from "./Components/LandingNav";
@@ -98,7 +98,11 @@ const Register = () => {
     let input = document.getElementById("password");
     setPassword(input.value);
   }
-  // function resetForm() {}
+  function clearForm() {
+    document.getElementById("username").value = null;
+    document.getElementById("password").value = null;
+    document.getElementById("confirmPassword").value = null;
+  }
   function registerUser(e) {
     e.preventDefault();
     axios
@@ -120,6 +124,10 @@ const Register = () => {
             window.location.reload();
           }, 2000);
         }
+      })
+      .catch((error) => {
+        alert(`The ${error}, has occurred`);
+        clearForm();
       });
   }
   return (
@@ -140,7 +148,7 @@ const Register = () => {
             </Password>
             <ConfirmPassword>
               <Label>Confirm Password</Label>
-              <Input type="password" />
+              <Input type="password" id="confirmPassword" />
             </ConfirmPassword>
 
             <SignUpButton onClick={registerUser}>Sign Up</SignUpButton>

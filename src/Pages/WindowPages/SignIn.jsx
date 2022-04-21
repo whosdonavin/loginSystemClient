@@ -1,6 +1,8 @@
+import axios from "axios";
 import styled from "styled-components";
-import LandingNav from "./Components/LandingNav";
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import LandingNav from "./Components/LandingNav";
 
 const Page = styled.section`
   height: 100%;
@@ -28,7 +30,7 @@ const Title = styled.p`
   font-size: 2rem;
 `;
 const Inputs = styled.div``;
-const SignIn = styled.div`
+const SignUp = styled.div`
   display: flex;
   font-size: 1rem;
   justify-content: space-between;
@@ -76,7 +78,45 @@ const SignUpLink = styled(Link)`
   }
 `;
 
-const Register = () => {
+const SignIn = () => {
+  const [username, setUsername] = useState(null);
+  const [password, setPassword] = useState(null);
+
+  function handleUsername() {
+    let usernameInput = document.getElementById("username");
+    setUsername(usernameInput.value);
+  }
+  function handlePassword() {
+    let passwordInput = document.getElementById("password");
+    setPassword(passwordInput.value);
+  }
+  function clearForm() {
+    document.getElementById("username").value = null;
+    document.getElementById("password").value = null;
+  }
+  function logUserIn(e) {
+    axios
+      .post("http://localhost:3333/api/login", {
+        reqUsername: username,
+        reqPassword: password,
+      })
+      .then((req, res) => {
+        const status = req.data;
+        console.log(status);
+        if (status.authenticated === true) {
+          clearForm();
+          alert(status.message);
+        } else if (status.authenticated === false) {
+          clearForm();
+          alert(status.message);
+        }
+      })
+      .catch((error) => {
+        console.log(`The ${error}, has occurred.`);
+      });
+    e.preventDefault();
+  }
+
   return (
     <Page>
       <LandingNav />
@@ -87,24 +127,24 @@ const Register = () => {
           <Inputs>
             <Username>
               <Label>Username</Label>
-              <Input></Input>
+              <Input id="username" onChange={handleUsername} />
             </Username>
             <Password>
               <Label>Password</Label>
-              <Input></Input>
+              <Input id="password" type="password" onChange={handlePassword} />
             </Password>
 
-            <SignInButton>Sign In</SignInButton>
+            <SignInButton onClick={logUserIn}>Sign In</SignInButton>
           </Inputs>
 
-          <SignIn>
+          <SignUp>
             <Text>Need To Register?</Text>
             <SignUpLink to="/Register">Sign Up</SignUpLink>
-          </SignIn>
+          </SignUp>
         </Form>
       </Container>
     </Page>
   );
 };
 
-export default Register;
+export default SignIn;
